@@ -14,7 +14,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/insights?query=${query}`
+        `https://productpulse-ai-production.up.railway.app/insights?query=${query}`
       );
 
       const result = await response.json();
