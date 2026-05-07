@@ -6,7 +6,7 @@ AI-powered customer review intelligence dashboard that analyzes product feedback
 
 ## Live Demo
 
-Frontend: https://your-vercel-url.vercel.app
+Frontend: https://product-pulse-ai.vercel.app/
 
 Backend API: https://productpulse-ai-production.up.railway.app/docs
 
