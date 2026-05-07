@@ -136,9 +136,3 @@ GET /insights?query=battery
 - Search analytics
 - Exportable reports
 - Voice-enabled search
-
----
-
-## Author
-
-Shreyansh Bagane
