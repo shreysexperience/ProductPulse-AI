@@ -1,0 +1,6 @@
+venv/
+node_modules/
+.next/
+__pycache__/
+chromadb_data/
+.env
