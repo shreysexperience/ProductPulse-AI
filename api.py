@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from sentence_transformers import SentenceTransformer
-from transformers import pipeline
 import chromadb
+from sentence_transformers import SentenceTransformer
 
 app = FastAPI()
 
@@ -16,49 +14,37 @@ app.add_middleware(
 )
 
 print("Loading embedding model...")
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
-print("Loading text model...")
-generator = pipeline(
-    "text-generation",
-    model="gpt2"
-)
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 print("Connecting to ChromaDB...")
 client = chromadb.PersistentClient(path="./chromadb_data")
-
 collection = client.get_collection("amazon_reviews")
 
 
 @app.get("/insights")
-def generate_insights(query: str):
+def get_insights(query: str):
+
+    query_embedding = embedding_model.encode(query).tolist()
 
     results = collection.query(
-        query_texts=[query],
+        query_embeddings=[query_embedding],
         n_results=5
     )
 
     reviews = results["documents"][0]
 
-    combined_reviews = " ".join(reviews)
-
-    prompt = f"""
+    insights = f"""
 Customer issue: {query}
 
 Reviews:
-{combined_reviews}
+{" ".join(reviews)}
 
-Summarize the customer complaints:
+Summary:
+Customers are repeatedly mentioning problems related to {query}.
 """
-
-    output = generator(
-        prompt,
-        max_length=120,
-        num_return_sequences=1
-    )
 
     return {
         "query": query,
         "reviews": reviews,
-        "insights": output[0]["generated_text"]
+        "insights": insights
     }
